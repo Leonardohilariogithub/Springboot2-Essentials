@@ -1,6 +1,8 @@
 package academy.devdojo.springboot2.controllers;
 
 import academy.devdojo.springboot2.domains.Anime;
+import academy.devdojo.springboot2.requests.AnimePostRequestBory;
+import academy.devdojo.springboot2.requests.AnimePutRequestBody;
 import academy.devdojo.springboot2.services.AnimeService;
 import academy.devdojo.springboot2.utils.DateUtil;
 import lombok.RequiredArgsConstructor;
@@ -17,25 +19,23 @@ import java.util.List;
 @Log4j2
 @RequiredArgsConstructor
 public class AnimeControler {
-
     private final DateUtil dateUtil;
     private final AnimeService animeService;
 
-    //http://localhost:8080/animes
     @GetMapping
-    public ResponseEntity<List<Anime>>  list(){
+    public ResponseEntity<List<Anime>> list() {
         log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
         return ResponseEntity.ok(animeService.listAll());
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Anime> findById(@PathVariable long id){
-        return ResponseEntity.ok(animeService.findById(id));
+    public ResponseEntity<Anime> findById(@PathVariable long id) {
+        return ResponseEntity.ok(animeService.findByIdOrThrowBadRequestException(id));
     }
 
     @PostMapping
-    public ResponseEntity<Anime> save(@RequestBody Anime anime){
-        return new ResponseEntity<>(animeService.save(anime), HttpStatus.CREATED);
+    public ResponseEntity<Anime> save(@RequestBody AnimePostRequestBory animePostRequestBody) {
+        return new ResponseEntity<>(animeService.save(animePostRequestBody), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/{id}")
@@ -45,8 +45,8 @@ public class AnimeControler {
     }
 
     @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody Anime anime) {
-        animeService.replace(anime);
+    public ResponseEntity<Void> replace(@RequestBody AnimePutRequestBody animePutRequestBody) {
+        animeService.replace(animePutRequestBody);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
