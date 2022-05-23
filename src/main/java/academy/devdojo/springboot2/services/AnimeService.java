@@ -23,6 +23,10 @@ public class AnimeService {
         return animeRepository.findAll(pageable);
     }
 
+    public List<Anime> listAllNonPageable() {
+        return animeRepository.findAll();
+    }
+
     public List<Anime> findByName(String name) {
         return animeRepository.findByName(name);
     }
@@ -31,6 +35,7 @@ public class AnimeService {
         return animeRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException("Anime not Found"));
     }
+
     @Transactional
     public Anime save(AnimePostRequestBory animePostRequestBory) {
         return animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequestBory));
@@ -46,3 +51,4 @@ public class AnimeService {
         animeRepository.save(anime);
     }
 }
+
